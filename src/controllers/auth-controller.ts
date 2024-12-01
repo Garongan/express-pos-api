@@ -1,5 +1,5 @@
-import { loginUser, registerUser } from '@services/auth-service';
-import { Request, Response } from 'express';
+import { loginUser, registerUser } from "@services/auth-service";
+import { Request, Response } from "express";
 
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -10,7 +10,7 @@ export const loginController = async (req: Request, res: Response) => {
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
-      res.status(400).json({ message: 'An unknown error occurred' });
+      res.status(400).json({ message: "An unknown error occurred" });
     }
   }
 };
@@ -24,7 +24,7 @@ export const registerController = async (req: Request, res: Response) => {
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
-      res.status(400).json({ message: 'An unknown error occurred' });
+      res.status(400).json({ message: "An unknown error occurred" });
     }
   }
 };
