@@ -1,0 +1,28 @@
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET!;
+
+interface TokenPayload {
+  id: string;
+  role: string;
+}
+
+export const generateToken = (payload: TokenPayload) => {
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: '1h',
+    algorithm: 'HS256',
+    issuer: 'POS-App',
+  });
+};
+
+export const verifyToken = (token: string) => {
+  try {
+    return jwt.verify(token, JWT_SECRET) as TokenPayload;
+  } catch (error) {
+    throw new Error('Invalid jwt token');
+  }
+};
+
+export const decodeToken = (token: string) => {
+  return jwt.decode(token) as TokenPayload;
+};

@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from "@prisma/client";
+import { PrismaClient, Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -9,7 +9,9 @@ export const findByUsername = async (username: string) => {
 export const createUser = async (data: {
   username: string;
   password: string;
-  roleId: string;
+  role?: Role;
 }) => {
-  return prisma.user.create({ data });
+  return prisma.user.create({
+    data: { ...data, role: data.role || Role.CASHIER },
+  });
 };

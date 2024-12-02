@@ -13,18 +13,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Role {
-  id    String @id @default(uuid())
-  name  String
-  users User[]
+enum Role {
+  CASHIER
+  ADMIN
 }
 
 model User {
   id           String        @id @default(uuid())
   username     String        @unique
   password     String
-  roleId       String
-  role         Role          @relation(fields: [roleId], references: [id])
+  role         Role          @default(CASHIER)
   transactions Transaction[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
