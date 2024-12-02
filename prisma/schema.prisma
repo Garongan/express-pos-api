@@ -26,6 +26,7 @@ model User {
   transactions Transaction[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
 }
 
 model Product {
@@ -37,6 +38,7 @@ model Product {
   transactionDetails TransactionDetail[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
+  deletedAt          DateTime?
 }
 
 model Transaction {
