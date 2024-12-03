@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { loginUser } from '../services/auth-service';
+import { loginService } from '../services/auth-service';
 import {
   customResponse,
   internalServerErrorResponse,
@@ -8,7 +8,7 @@ import {
 export const loginController = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-    const token = await loginUser(username, password);
+    const token = await loginService(username, password);
     customResponse(res, 200, { token });
   } catch (error) {
     if (error instanceof Error) {

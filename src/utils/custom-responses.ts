@@ -5,7 +5,7 @@ export const customResponse = (
   statusCode: number,
   message: object,
 ) => {
-  res.status(statusCode).json({ statusCode: 200, data: { message } });
+  res.status(statusCode).json({ statusCode: 200, data: message });
 };
 
 export const internalServerErrorResponse = (res: Response) => {
