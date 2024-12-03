@@ -3,19 +3,19 @@ import { Role } from '@prisma/client';
 import {
   activateUser,
   createUser,
-  deleteUserById,
-  findUserById,
-  findUserByUsername,
+  deleteUser,
   getAllUser,
+  getUserById,
+  getUserByUsername,
   updateUser,
 } from '../repositories/user-repository';
 
 export const registerCashierService = async (data: {
   username: string;
   password: string;
-  role?: string;
+  role: string;
 }) => {
-  const existingUser = await findUserByUsername(data.username);
+  const existingUser = await getUserByUsername(data.username);
   if (existingUser) {
     throw new Error('User already exists');
   }
@@ -45,12 +45,12 @@ export const getAllCashierService = async (isDeleted?: string) => {
   throw new Error('Invalid params');
 };
 
-export const getCashierService = async (id: string) => {
-  return await findUserById(id, Role.CASHIER);
+export const getCashierByIdService = async (id: string) => {
+  return await getUserById(id, Role.CASHIER);
 };
 
-export const deleteCahiserService = async (id: string) => {
-  return await deleteUserById(id, Role.CASHIER);
+export const deleteCashierService = async (id: string) => {
+  return await deleteUser(id, Role.CASHIER);
 };
 
 export const updateCashierService = async (data: {

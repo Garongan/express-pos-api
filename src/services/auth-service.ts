@@ -1,9 +1,9 @@
 import bcyrpt from 'bcrypt';
-import { findUserByUsername } from '../repositories/user-repository';
 import { generateToken } from '../utils/jwt-helper';
+import { getUserByUsername } from '../repositories/user-repository';
 
 export const loginService = async (username: string, password: string) => {
-  const user = await findUserByUsername(username);
+  const user = await getUserByUsername(username);
   if (!user) throw new Error('User not found');
 
   const isValidPassword = await bcyrpt.compare(password, user.password);

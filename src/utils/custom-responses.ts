@@ -1,6 +1,6 @@
 import { Response } from 'express';
 
-export const customResponse = (
+export const commonResponse = (
   res: Response,
   statusCode: number,
   message: object,
@@ -15,12 +15,12 @@ export const internalServerErrorResponse = (res: Response) => {
   });
 };
 
-export const customErrorResponse = (res: Response, error: unknown) => {
+export const errorResponse = (res: Response, error: unknown) => {
   if (error instanceof Error) {
     if (error.message.includes('not found')) {
-      customResponse(res, 404, { message: 'Not found' });
+      commonResponse(res, 404, { message: 'Not found' });
     } else {
-      customResponse(res, 400, { message: error.message });
+      commonResponse(res, 400, { message: error.message });
     }
   } else {
     internalServerErrorResponse(res);

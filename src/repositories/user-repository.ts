@@ -2,17 +2,17 @@ import { PrismaClient, Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const findUserByUsername = (username: string) => {
+export const getUserByUsername = (username: string) => {
   return prisma.user.findUnique({ where: { username: username } });
 };
 
 export const createUser = (data: {
   username: string;
   password: string;
-  role?: Role;
+  role: Role;
 }) => {
   return prisma.user.create({
-    data: { ...data, role: data.role || Role.CASHIER },
+    data: { ...data, role: data.role },
     select: {
       id: true,
       username: true,
@@ -24,7 +24,7 @@ export const createUser = (data: {
   });
 };
 
-export const findUserById = (id: string, role: Role) => {
+export const getUserById = (id: string, role: Role) => {
   return prisma.user.findUnique({
     where: { id: id, role: role },
     select: {
@@ -64,7 +64,7 @@ export const getAllUser = (isDeleted: boolean, role: Role) => {
       });
 };
 
-export const deleteUserById = (id: string, role: Role) => {
+export const deleteUser = (id: string, role: Role) => {
   return prisma.user.update({
     where: { id: id, deletedAt: null, role: role },
     data: { deletedAt: new Date() },
@@ -93,7 +93,7 @@ export const updateUser = (data: {
 
 export const activateUser = (id: string) => {
   return prisma.user.update({
-    where: { id: id },
+    where: { id: id, deletedAt: { not: null } },
     data: {
       deletedAt: null,
     },

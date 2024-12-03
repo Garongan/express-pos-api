@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import {
   activateCashierService,
-  deleteCahiserService,
+  deleteCashierService,
   getAllCashierService,
-  getCashierService,
+  getCashierByIdService,
   registerCashierService,
   updateCashierService,
-} from '../services/admin-service';
-import { customErrorResponse, customResponse } from '../utils/custom-responses';
+} from '../services/cashier-service';
+import { commonResponse, errorResponse } from '../utils/custom-responses';
 
 export const registerCashierController = async (
   req: Request,
@@ -16,39 +16,40 @@ export const registerCashierController = async (
   try {
     const { username, password, role } = req.body;
     const user = await registerCashierService({ username, password, role });
-    customResponse(res, 201, { user });
+    commonResponse(res, 201, { user });
   } catch (error) {
-    customErrorResponse(res, error);
+    errorResponse(res, error);
   }
 };
 
 export const getAllCashierController = async (req: Request, res: Response) => {
-  const { isDeleted } = req.query;
   try {
+    const { isDeleted } = req.query;
     const cashiers = await getAllCashierService(isDeleted?.toString());
-    customResponse(res, 200, { cashiers });
+    commonResponse(res, 200, { cashiers });
   } catch (error) {
-    customErrorResponse(res, error);
+    errorResponse(res, error);
   }
 };
 
-export const getCashierController = async (req: Request, res: Response) => {
+export const getCashierByIdController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const cashier = await getCashierService(id);
-    customResponse(res, 200, { cashier });
+    const cashier = await getCashierByIdService(id);
+    commonResponse(res, 200, { cashier });
   } catch (error) {
-    customErrorResponse(res, error);
+    errorResponse(res, error);
   }
 };
 
 export const deleteCashierController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const deletedCashier = await deleteCahiserService(id);
-    customResponse(res, 200, { deletedCashier });
+    const deletedCashier = await deleteCashierService(id);
+    if (deletedCashier)
+      commonResponse(res, 200, { message: 'Cashier has been deleted' });
   } catch (error) {
-    customErrorResponse(res, error);
+    errorResponse(res, error);
   }
 };
 
@@ -58,9 +59,9 @@ export const updateCashierController = async (req: Request, res: Response) => {
     const { username, password, role } = req.body;
     const data = { id: id, username: username, password: password, role: role };
     const updatedCashier = await updateCashierService(data);
-    customResponse(res, 200, { updatedCashier });
+    commonResponse(res, 200, { updatedCashier });
   } catch (error) {
-    customErrorResponse(res, error);
+    errorResponse(res, error);
   }
 };
 
@@ -71,8 +72,9 @@ export const activateCashierController = async (
   try {
     const { id } = req.params;
     const activatedCashier = await activateCashierService(id);
-    customResponse(res, 200, { activatedCashier });
+    if (activatedCashier)
+      commonResponse(res, 200, { message: 'Cashier has been activated' });
   } catch (error) {
-    customErrorResponse(res, error);
+    errorResponse(res, error);
   }
 };

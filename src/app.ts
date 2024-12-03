@@ -3,7 +3,8 @@ import cors from 'cors';
 import express from 'express';
 import { errorHandler } from './middlewares/error';
 import authRoutes from './routes/auth-routes';
-import adminRoutes from './routes/admin-routes';
+import cashierRoutes from './routes/cashier-routes';
+import productRoutes from './routes/product-routes';
 
 const app = express();
 
@@ -13,8 +14,8 @@ app.use(cors());
 
 // routes
 app.use(errorHandler);
-app.use('/admin', adminRoutes);
+app.use('/cashiers', cashierRoutes);
 app.use('/auth', authRoutes);
-// app.use('/users', userRoutes);
+app.use('/products', productRoutes);
 
 export default app;

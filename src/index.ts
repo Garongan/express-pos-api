@@ -4,8 +4,7 @@ import { initAdmin } from './utils/init-admin';
 
 dotenv.config();
 
-const port: number =
-  process.env.PORT != null ? parseInt(process.env.PORT) : 3000;
+const port: number = parseInt(process.env.PORT!);
 
 const startServer = async () => {
   try {
