@@ -32,8 +32,11 @@ export const registerCashierService = async (data: {
   });
 };
 
-export const getAllCashierService = async () => {
-  return getAllUser(Role.CASHIER);
+export const getAllCashierService = async (isDeleted?: string) => {
+  if (isDeleted === 'true' || isDeleted === undefined) {
+    return getAllUser(true, Role.CASHIER);
+  }
+  return getAllUser(false, Role.CASHIER);
 };
 
 export const getCashierService = async (id: string) => {

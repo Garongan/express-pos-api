@@ -26,7 +26,7 @@ export const createUser = async (data: {
 
 export const findUserById = async (id: string, role: Role) => {
   return prisma.user.findUnique({
-    where: { id: id, deletedAt: null, role: role },
+    where: { id: id, role: role },
     select: {
       id: true,
       username: true,
@@ -38,18 +38,30 @@ export const findUserById = async (id: string, role: Role) => {
   });
 };
 
-export const getAllUser = async (role: Role) => {
-  return prisma.user.findMany({
-    where: { deletedAt: null, role: role },
-    select: {
-      id: true,
-      username: true,
-      role: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-  });
+export const getAllUser = async (isDeleted: boolean, role: Role) => {
+  return isDeleted
+    ? prisma.user.findMany({
+        where: { deletedAt: null, role: role },
+        select: {
+          id: true,
+          username: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+          deletedAt: true,
+        },
+      })
+    : prisma.user.findMany({
+        where: { role: role },
+        select: {
+          id: true,
+          username: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+          deletedAt: true,
+        },
+      });
 };
 
 export const deleteUserById = async (id: string, role: Role) => {
@@ -66,7 +78,7 @@ export const updateUser = async (data: {
   role: Role;
 }) => {
   return prisma.user.update({
-    where: { id: data.id, deletedAt: null },
+    where: { id: data.id },
     data: data,
     select: {
       id: true,

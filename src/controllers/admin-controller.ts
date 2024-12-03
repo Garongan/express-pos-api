@@ -29,8 +29,9 @@ export const registerCashierController = async (
 };
 
 export const getAllCashierController = async (req: Request, res: Response) => {
+  const { isDeleted } = req.query;
   try {
-    const cashiers = await getAllCashierService();
+    const cashiers = await getAllCashierService(isDeleted?.toString());
     customResponse(res, 200, { cashiers });
   } catch (error) {
     if (error instanceof Error) {

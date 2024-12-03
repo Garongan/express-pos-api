@@ -6,6 +6,23 @@ import {
 } from '../utils/custom-responses';
 import { decodeToken, verifyToken } from '../utils/jwt-helper';
 
+export const basicAuth = (req: Request, res: Response, next: NextFunction) => {
+  const credentials = process.env.BASIC_AUTH;
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Basic ')) {
+    customResponse(res, 400, { message: 'No authorization provided' });
+    return;
+  }
+
+  if (credentials !== authHeader.split(' ')[1]) {
+    customResponse(res, 401, { message: 'Invalid authentication' });
+    return;
+  }
+
+  next();
+};
+
 export const authMiddleware = (
   req: Request,
   res: Response,
@@ -14,8 +31,9 @@ export const authMiddleware = (
   const token = getToken(req, res);
   try {
     if (token && !verifyToken(token)) {
-      customResponse(res, 401, { message: 'Invalid or expired token' });
+      customResponse(res, 400, { message: 'Invalid or expired token' });
     }
+    next();
   } catch (error) {
     if (error instanceof Error) {
       customResponse(res, 400, { message: error.message });
@@ -23,18 +41,17 @@ export const authMiddleware = (
       internalServerErrorResponse(res);
     }
   }
-  next();
 };
 
 export const getToken = (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    customResponse(res, 401, { message: 'No token provided' });
+    customResponse(res, 400, { message: 'No authorization provided' });
     return;
   }
 
-  return authHeader.split(' ')[1];
+  return authHeader!.split(' ')[1];
 };
 
 export const adminMiddleware = (
@@ -49,6 +66,7 @@ export const adminMiddleware = (
     if (decodedToken.role !== Role.ADMIN) {
       customResponse(res, 403, { message: 'Forbidden access' });
     }
+    next();
   } catch (error) {
     if (error instanceof Error) {
       customResponse(res, 400, { message: error.message });
@@ -56,5 +74,4 @@ export const adminMiddleware = (
       internalServerErrorResponse(res);
     }
   }
-  next();
 };
