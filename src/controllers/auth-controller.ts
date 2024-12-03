@@ -1,16 +1,20 @@
 import { Request, Response } from 'express';
 import { loginUser } from '../services/auth-service';
+import {
+  customResponse,
+  internalServerErrorResponse,
+} from '../utils/custom-responses';
 
 export const loginController = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     const token = await loginUser(username, password);
-    res.status(200).json({ token });
+    customResponse(res, 200, { token });
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      customResponse(res, 400, { message: error.message });
     } else {
-      res.status(400).json({ message: 'An unknown error occurred' });
+      internalServerErrorResponse(res);
     }
   }
 };

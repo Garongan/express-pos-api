@@ -1,13 +1,17 @@
 import { Router } from 'express';
-import { authMiddleware } from '../middlewares/middleware';
-import { registerCashierController } from '../controllers/admin-controller';
+import {
+  getAllCashier,
+  registerCashierController,
+} from '../controllers/admin-controller';
+import { adminMiddleware, authMiddleware } from '../middlewares/middleware';
 
 const adminRoutes = Router();
 
-adminRoutes.post(
-  '/register-cashier',
-  authMiddleware,
-  registerCashierController,
-);
+adminRoutes.use(authMiddleware);
+adminRoutes.use(adminMiddleware);
+
+adminRoutes.post('/cashiers/register', registerCashierController);
+
+adminRoutes.get('cashiers', getAllCashier);
 
 export default adminRoutes;

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { internalServerErrorResponse } from '../utils/custom-responses';
 
 export const errorHandler = (
   err: Error,
@@ -6,6 +7,6 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  res.status(500).json({ errors: [{ message: 'Something went wrong' }] });
+  internalServerErrorResponse(res);
   next();
 };
