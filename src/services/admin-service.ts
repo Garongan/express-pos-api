@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Role } from '@prisma/client';
 import {
+  activateUser,
   createUser,
   deleteUserById,
   findUserById,
@@ -25,7 +26,7 @@ export const registerCashierService = async (data: {
   }
 
   const hashedPassword = await bcrypt.hash(data.password, 10);
-  return createUser({
+  return await createUser({
     username: data.username,
     password: hashedPassword,
     role: data.role as Role,
@@ -33,18 +34,23 @@ export const registerCashierService = async (data: {
 };
 
 export const getAllCashierService = async (isDeleted?: string) => {
-  if (isDeleted === 'true' || isDeleted === undefined) {
-    return getAllUser(true, Role.CASHIER);
+  if (isDeleted === 'false' || isDeleted === undefined) {
+    return await getAllUser(false, Role.CASHIER);
   }
-  return getAllUser(false, Role.CASHIER);
+
+  if (isDeleted === 'true') {
+    return await getAllUser(true, Role.CASHIER);
+  }
+
+  throw new Error('Invalid params');
 };
 
 export const getCashierService = async (id: string) => {
-  return findUserById(id, Role.CASHIER);
+  return await findUserById(id, Role.CASHIER);
 };
 
 export const deleteCahiserService = async (id: string) => {
-  return deleteUserById(id, Role.CASHIER);
+  return await deleteUserById(id, Role.CASHIER);
 };
 
 export const updateCashierService = async (data: {
@@ -57,5 +63,13 @@ export const updateCashierService = async (data: {
     throw new Error('Invalid role');
   }
   const hashedPassword = await bcrypt.hash(data.password, 10);
-  return updateUser({ ...data, password: hashedPassword });
+  return await updateUser({ ...data, password: hashedPassword });
+};
+
+export const activateCashierService = async (id: string) => {
+  const activatedUser = await activateUser(id);
+  if (activatedUser.deletedAt === null) {
+    throw new Error('User already active');
+  }
+  return activatedUser;
 };

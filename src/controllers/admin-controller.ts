@@ -1,15 +1,13 @@
 import { Request, Response } from 'express';
 import {
+  activateCashierService,
   deleteCahiserService,
   getAllCashierService,
   getCashierService,
   registerCashierService,
   updateCashierService,
 } from '../services/admin-service';
-import {
-  customResponse,
-  internalServerErrorResponse,
-} from '../utils/custom-responses';
+import { customErrorResponse, customResponse } from '../utils/custom-responses';
 
 export const registerCashierController = async (
   req: Request,
@@ -20,11 +18,7 @@ export const registerCashierController = async (
     const user = await registerCashierService({ username, password, role });
     customResponse(res, 201, { user });
   } catch (error) {
-    if (error instanceof Error) {
-      customResponse(res, 400, { message: error.message });
-    } else {
-      internalServerErrorResponse(res);
-    }
+    customErrorResponse(res, error);
   }
 };
 
@@ -34,11 +28,7 @@ export const getAllCashierController = async (req: Request, res: Response) => {
     const cashiers = await getAllCashierService(isDeleted?.toString());
     customResponse(res, 200, { cashiers });
   } catch (error) {
-    if (error instanceof Error) {
-      customResponse(res, 400, { message: error.message });
-    } else {
-      internalServerErrorResponse(res);
-    }
+    customErrorResponse(res, error);
   }
 };
 
@@ -48,11 +38,7 @@ export const getCashierController = async (req: Request, res: Response) => {
     const cashier = await getCashierService(id);
     customResponse(res, 200, { cashier });
   } catch (error) {
-    if (error instanceof Error) {
-      customResponse(res, 400, { message: error.message });
-    } else {
-      internalServerErrorResponse(res);
-    }
+    customErrorResponse(res, error);
   }
 };
 
@@ -62,11 +48,7 @@ export const deleteCashierController = async (req: Request, res: Response) => {
     const deletedCashier = await deleteCahiserService(id);
     customResponse(res, 200, { deletedCashier });
   } catch (error) {
-    if (error instanceof Error) {
-      customResponse(res, 400, { message: error.message });
-    } else {
-      internalServerErrorResponse(res);
-    }
+    customErrorResponse(res, error);
   }
 };
 
@@ -78,10 +60,19 @@ export const updateCashierController = async (req: Request, res: Response) => {
     const updatedCashier = await updateCashierService(data);
     customResponse(res, 200, { updatedCashier });
   } catch (error) {
-    if (error instanceof Error) {
-      customResponse(res, 400, { message: error.message });
-    } else {
-      internalServerErrorResponse(res);
-    }
+    customErrorResponse(res, error);
+  }
+};
+
+export const activateCashierController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+    const activatedCashier = await activateCashierService(id);
+    customResponse(res, 200, { activatedCashier });
+  } catch (error) {
+    customErrorResponse(res, error);
   }
 };
