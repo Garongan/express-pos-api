@@ -6,6 +6,7 @@ import authRoutes from './routes/auth-routes';
 import cashierRoutes from './routes/cashier-routes';
 import productRoutes from './routes/product-routes';
 import adminRoutes from './routes/admin-routes';
+import transactionRoutes from './routes/transaction-routes';
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use('/cashiers', cashierRoutes);
 app.use('/cashiers', adminRoutes);
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
+app.use('/transactions', transactionRoutes);
 
 export default app;

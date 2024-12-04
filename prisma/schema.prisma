@@ -18,11 +18,16 @@ enum Role {
   ADMIN
 }
 
+enum PaymentType {
+  CASH
+  QRIS
+}
+
 model User {
   id           String        @id @default(uuid())
   username     String        @unique
   password     String
-  role         Role          @default(CASHIER)
+  role         Role
   transactions Transaction[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -31,7 +36,7 @@ model User {
 
 model Product {
   id                 String              @id @default(uuid())
-  name               String   @unique
+  name               String              @unique
   price              Float
   stock              Int
   description        String?
@@ -46,6 +51,7 @@ model Transaction {
   total              Float
   userId             String
   user               User                @relation(fields: [userId], references: [id])
+  paymentType        PaymentType
   transactionDetails TransactionDetail[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt

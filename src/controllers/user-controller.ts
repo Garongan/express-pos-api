@@ -1,51 +1,52 @@
 import { Request, Response } from 'express';
 import {
-  activateCashierService,
-  deleteCashierService,
-  getAllCashierService,
-  getCashierByIdService,
-  registerCashierService,
-  updateCashierService,
-} from '../services/cashier-service';
+  activateUserService,
+  deleteUserService,
+  getAllUserService,
+  getUserByIdService,
+  registerUserService,
+  updateUserService,
+} from '../services/user-service';
 import { commonResponse, errorResponse } from '../utils/custom-responses';
+import { Role } from '@prisma/client';
 
-export const registerCashierController = async (
-  req: Request,
-  res: Response,
-) => {
+export const registerUserController = async (req: Request, res: Response) => {
   try {
     const { username, password, role } = req.body;
-    const user = await registerCashierService({ username, password, role });
+    const user = await registerUserService({ username, password, role });
     commonResponse(res, 201, { user });
   } catch (error) {
     errorResponse(res, error);
   }
 };
 
-export const getAllCashierController = async (req: Request, res: Response) => {
+export const getAllUserController = async (req: Request, res: Response) => {
   try {
     const { isDeleted } = req.query;
-    const cashiers = await getAllCashierService(isDeleted?.toString());
+    const cashiers = await getAllUserService(
+      Role.CASHIER,
+      isDeleted?.toString(),
+    );
     commonResponse(res, 200, { cashiers });
   } catch (error) {
     errorResponse(res, error);
   }
 };
 
-export const getCashierByIdController = async (req: Request, res: Response) => {
+export const getUserByIdController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const cashier = await getCashierByIdService(id);
+    const cashier = await getUserByIdService(id, Role.CASHIER);
     commonResponse(res, 200, { cashier });
   } catch (error) {
     errorResponse(res, error);
   }
 };
 
-export const deleteCashierController = async (req: Request, res: Response) => {
+export const deleteUserController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const deletedCashier = await deleteCashierService(id);
+    const deletedCashier = await deleteUserService(id, Role.CASHIER);
     if (deletedCashier)
       commonResponse(res, 200, { message: 'Cashier has been deleted' });
   } catch (error) {
@@ -53,25 +54,22 @@ export const deleteCashierController = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCashierController = async (req: Request, res: Response) => {
+export const updateUserController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { username, password, role } = req.body;
     const data = { id: id, username: username, password: password, role: role };
-    const updatedCashier = await updateCashierService(data);
+    const updatedCashier = await updateUserService(data);
     commonResponse(res, 200, { updatedCashier });
   } catch (error) {
     errorResponse(res, error);
   }
 };
 
-export const activateCashierController = async (
-  req: Request,
-  res: Response,
-) => {
+export const activateUserController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const activatedCashier = await activateCashierService(id);
+    const activatedCashier = await activateUserService(id);
     if (activatedCashier)
       commonResponse(res, 200, { message: 'Cashier has been activated' });
   } catch (error) {

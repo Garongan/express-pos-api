@@ -1,22 +1,22 @@
 import { Router } from 'express';
-import { adminMiddleware, authMiddleware } from '../middlewares/middleware';
 import {
-  activateCashierController,
-  deleteCashierController,
-  getAllCashierController,
-  registerCashierController,
-  updateCashierController,
-} from '../controllers/cashier-controller';
+  activateUserController,
+  deleteUserController,
+  getAllUserController,
+  registerUserController,
+  updateUserController,
+} from '../controllers/user-controller';
+import { adminMiddleware, authMiddleware } from '../middlewares/middleware';
 
 const adminRoutes = Router();
 
 adminRoutes.use(authMiddleware);
 adminRoutes.use(adminMiddleware);
 
-adminRoutes.get('/', getAllCashierController);
-adminRoutes.post('/register', registerCashierController);
-adminRoutes.delete('/:id', deleteCashierController);
-adminRoutes.put('/:id', updateCashierController);
-adminRoutes.put('/:id/activate', activateCashierController);
+adminRoutes.get('/', getAllUserController);
+adminRoutes.post('/register', registerUserController);
+adminRoutes.delete('/:id', deleteUserController);
+adminRoutes.put('/:id', updateUserController);
+adminRoutes.put('/:id/activate', activateUserController);
 
 export default adminRoutes;

@@ -10,7 +10,7 @@ import {
   updateUser,
 } from '../repositories/user-repository';
 
-export const registerCashierService = async (data: {
+export const registerUserService = async (data: {
   username: string;
   password: string;
   role: string;
@@ -33,27 +33,27 @@ export const registerCashierService = async (data: {
   });
 };
 
-export const getAllCashierService = async (isDeleted?: string) => {
+export const getAllUserService = async (role: Role, isDeleted?: string) => {
   if (isDeleted === 'false' || isDeleted === undefined) {
-    return await getAllUser(false, Role.CASHIER);
+    return await getAllUser(false, role);
   }
 
   if (isDeleted === 'true') {
-    return await getAllUser(true, Role.CASHIER);
+    return await getAllUser(true, role);
   }
 
   throw new Error('Invalid params');
 };
 
-export const getCashierByIdService = async (id: string) => {
-  return await getUserById(id, Role.CASHIER);
+export const getUserByIdService = async (id: string, role: Role) => {
+  return await getUserById(id, role);
 };
 
-export const deleteCashierService = async (id: string) => {
-  return await deleteUser(id, Role.CASHIER);
+export const deleteUserService = async (id: string, role: Role) => {
+  return await deleteUser(id, role);
 };
 
-export const updateCashierService = async (data: {
+export const updateUserService = async (data: {
   id: string;
   username: string;
   password: string;
@@ -66,7 +66,7 @@ export const updateCashierService = async (data: {
   return await updateUser({ ...data, password: hashedPassword });
 };
 
-export const activateCashierService = async (id: string) => {
+export const activateUserService = async (id: string) => {
   const activatedUser = await activateUser(id);
   if (activatedUser.deletedAt === null) {
     throw new Error('User already active');

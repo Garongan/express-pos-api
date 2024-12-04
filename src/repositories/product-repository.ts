@@ -65,7 +65,6 @@ export const getAllProduct = (isDeleted: boolean) => {
 };
 
 export const createProduct = (data: {
-  id: string;
   name: string;
   price: number;
   stock: number;
