@@ -66,6 +66,7 @@ export const adminMiddleware = (
 
     if (decodedToken.role !== Role.ADMIN) {
       commonResponse(res, 403, { message: 'Forbidden access' });
+      return;
     }
     next();
   } catch (error) {
