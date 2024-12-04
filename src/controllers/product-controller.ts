@@ -31,9 +31,8 @@ export const getAllProductController = async (req: Request, res: Response) => {
 
 export const createProductController = async (req: Request, res: Response) => {
   try {
-    const { id, name, price, stock, description } = req.body;
+    const { name, price, stock, description } = req.body;
     const createdProduct = await createProductService({
-      id,
       name,
       price,
       stock,

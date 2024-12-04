@@ -1,16 +1,19 @@
 import { PaymentType, Role } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
-import { createTransaction } from '../repositories/transaction-repository';
+import {
+  createTransaction,
+  getAllTransaction,
+  getTransactionById,
+} from '../repositories/transaction-repository';
 import { getUserByIdService } from './user-service';
 import { TransactionDetailInterface } from '../model/transaction-detail-interface';
+import { getProductByIdService, updateProductService } from './product-service';
+import { decodeToken } from '../utils/jwt-helper';
 
 export const createTransactionService = async (data: {
   userId: string;
   paymentType: string;
   transactionDetails: TransactionDetailInterface[];
 }) => {
-  const transactionId = uuidv4();
-
   const user = await getUserByIdService(data.userId, Role.CASHIER);
   if (!user) return;
 
@@ -22,23 +25,27 @@ export const createTransactionService = async (data: {
     throw new Error('Invalid payment type');
   }
 
-  const total = data.transactionDetails.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0,
+  let total = 0;
+
+  const transactionDetails = await Promise.all(
+    data.transactionDetails.map(async (value) => {
+      const product = await getProductByIdService(value.productId);
+      await updateProductService({
+        id: value.productId,
+        stock: product!.stock - value.quantity,
+        name: product!.name,
+        price: product!.price,
+        description: product!.description!.toString(),
+      });
+      total += product!.price * value.quantity;
+      return {
+        price: product!.price,
+        ...value,
+      };
+    }),
   );
 
-  const transactionDetails = data.transactionDetails.map((value) => {
-    return {
-      id: uuidv4(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      transactionId: transactionId,
-      ...value,
-    };
-  });
-
   const newTransactionData = {
-    id: transactionId,
     total: total,
     userId: user.id,
     paymentType: data.paymentType as PaymentType,
@@ -46,4 +53,36 @@ export const createTransactionService = async (data: {
   };
 
   return await createTransaction(newTransactionData);
+};
+
+export const getTransactionByIdService = async (id: string, token: string) => {
+  const decodedToken = decodeToken(token);
+  if (decodedToken.role === Role.ADMIN)
+    return await getTransactionById(id, null);
+  return await getTransactionById(id, decodedToken.id);
+};
+
+export const getAllTransactionService = async (
+  paymentType: string | undefined,
+  token: string,
+) => {
+  const decodedToken = decodeToken(token);
+
+  if (paymentType === undefined && decodedToken.role === Role.ADMIN)
+    return await getAllTransaction(undefined, null);
+  if (paymentType === undefined)
+    return await getAllTransaction(undefined, decodedToken.id);
+
+  const payType = Object.values(PaymentType).includes(
+    paymentType as PaymentType,
+  );
+
+  if (!payType) {
+    throw new Error('Invalid payment type');
+  }
+
+  if (decodedToken.role === Role.ADMIN)
+    return await getAllTransaction(paymentType as PaymentType, null);
+
+  return await getAllTransaction(paymentType as PaymentType, decodedToken.id);
 };

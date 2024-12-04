@@ -25,7 +25,6 @@ export const getAllProductService = async (isDeleted?: string) => {
 };
 
 export const createProductService = async (data: {
-  id: string;
   name: string;
   price: number;
   stock: number;
@@ -54,9 +53,10 @@ export const deleteProductService = async (id: string) => {
 };
 
 export const activateProductService = async (id: string) => {
-  const activatedProduct = await activateProduct(id);
-  if (activatedProduct.deletedAt === null) {
+  const existingUser = await getProductByIdService(id);
+
+  if (existingUser && existingUser.deletedAt === null) {
     throw new Error('Product already active');
   }
-  return activatedProduct;
+  return await activateProduct(id);
 };

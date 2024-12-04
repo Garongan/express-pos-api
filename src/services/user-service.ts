@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt';
 import { Role } from '@prisma/client';
+import bcrypt from 'bcrypt';
 import {
   activateUser,
   createUser,
@@ -67,9 +67,9 @@ export const updateUserService = async (data: {
 };
 
 export const activateUserService = async (id: string) => {
-  const activatedUser = await activateUser(id);
-  if (activatedUser.deletedAt === null) {
+  const existingUser = await getUserByIdService(id, Role.CASHIER);
+  if (existingUser && existingUser.deletedAt === null) {
     throw new Error('User already active');
   }
-  return activatedUser;
+  return await activateUser(id);
 };

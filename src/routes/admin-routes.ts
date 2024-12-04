@@ -10,8 +10,7 @@ import { adminMiddleware, authMiddleware } from '../middlewares/middleware';
 
 const adminRoutes = Router();
 
-adminRoutes.use(authMiddleware);
-adminRoutes.use(adminMiddleware);
+adminRoutes.use(authMiddleware, adminMiddleware);
 
 adminRoutes.get('/', getAllUserController);
 adminRoutes.post('/register', registerUserController);

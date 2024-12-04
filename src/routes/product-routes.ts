@@ -11,14 +11,15 @@ import {
 
 const productRoutes = Router();
 
+// auth middleware
 productRoutes.use(authMiddleware);
-productRoutes.use(adminMiddleware);
-
 productRoutes.get('/:id', getProductByIdController);
 productRoutes.get('/', getAllProductController);
-productRoutes.post('/', createProductController);
-productRoutes.put('/:id', updateProductController);
-productRoutes.delete('/:id', deleteProductController);
-productRoutes.put('/:id/activate', activatedProductController);
+
+// auth and admin middleware
+productRoutes.post('/', adminMiddleware, createProductController);
+productRoutes.put('/:id', adminMiddleware, updateProductController);
+productRoutes.delete('/:id', adminMiddleware, deleteProductController);
+productRoutes.put('/:id/activate', adminMiddleware, activatedProductController);
 
 export default productRoutes;
