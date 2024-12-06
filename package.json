@@ -19,7 +19,8 @@
     "dev": "nodemon src/index.ts",
     "format": "npx prettier ./src/** --write",
     "lint": "eslint ./src/**/*.{ts,js}",
-    "lint:fix": "eslint ./src/**/*.{ts,js} --fix"
+    "lint:fix": "eslint ./src/**/*.{ts,js} --fix",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
