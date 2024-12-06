@@ -5,6 +5,9 @@
 - Authorization by role cashier or admin. 
 - All endpoint already tested and documented using Postman.
 
+# This api already to use and it's online
+Hosted via vercel and supabase for postgreSQL online database
+
 # Postman documentation
 [https://documenter.getpostman.com/view/30958942/2sAYBaA9qy](https://documenter.getpostman.com/view/30958942/2sAYBaA9qy)
 
