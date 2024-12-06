@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import app from './app';
-import { initAdmin } from './utils/init-admin';
+import app from '../src/app';
+import { initAdmin } from '../src/utils/init-admin';
 
 dotenv.config();
 

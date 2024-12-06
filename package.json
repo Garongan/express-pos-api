@@ -16,7 +16,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon api/index.ts",
     "format": "npx prettier ./src/** --write",
     "lint": "eslint ./src/**/*.{ts,js}",
     "lint:fix": "eslint ./src/**/*.{ts,js} --fix",
