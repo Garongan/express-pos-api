@@ -9,6 +9,7 @@ import adminRoutes from '../src/routes/admin-routes';
 import authRoutes from '../src/routes/auth-routes';
 import productRoutes from '../src/routes/product-routes';
 import transactionRoutes from '../src/routes/transaction-routes';
+import { homePage } from '../src';
 
 dotenv.config();
 const app = express();
@@ -20,6 +21,7 @@ app.use(json());
 app.use(cors());
 
 // routes
+app.use('/', homePage)
 app.use(errorHandler);
 app.use('/cashiers', cashierRoutes);
 app.use('/cashiers', adminRoutes);
