@@ -21,7 +21,7 @@ app.use(json());
 app.use(cors());
 
 // routes
-app.use('/', homePage)
+app.get('/', homePage);
 app.use(errorHandler);
 app.use('/cashiers', cashierRoutes);
 app.use('/cashiers', adminRoutes);
